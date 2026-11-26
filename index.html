@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#101827">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="TG Studio">
+  <meta name="description" content="TG Studio 手机端管理面板">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="apple-touch-icon" href="assets/icon-192.png">
+  <link rel="stylesheet" href="styles.css">
+  <title>TG Studio</title>
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <div class="brand"><div class="brand-mark">TG</div><div><strong>TG Studio</strong><small>Mobile · 0.1.0</small></div></div>
+      <button class="icon-btn" id="installBtn" aria-label="安装应用" title="安装/添加到主屏幕">＋</button>
+    </header>
+
+    <main>
+      <section class="page active" id="page-home">
+        <div class="hero">
+          <div><span class="eyebrow">工作台</span><h1>把管理工作<br>放进掌心。</h1><p>本地优先 · 手机适配 · 数据由你掌控</p></div>
+          <div class="hero-orb">TG</div>
+        </div>
+        <div class="notice"><span class="notice-dot"></span><div><b>本地演示模式</b><small>当前数据保存在本设备浏览器中，尚未连接 Telegram。</small></div></div>
+        <div class="section-head"><h2>概览</h2><span class="muted">本机数据</span></div>
+        <div class="stats">
+          <article class="stat"><span>账号资料</span><b id="statAccounts">0</b><small>仅保存备注信息</small></article>
+          <article class="stat"><span>已授权联系人</span><b id="statContacts">0</b><small>明确同意接收消息</small></article>
+          <article class="stat"><span>消息模板</span><b id="statTemplates">0</b><small>可重复使用</small></article>
+          <article class="stat"><span>任务草稿</span><b id="statTasks">0</b><small>不会自动发送</small></article>
+        </div>
+        <div class="section-head"><h2>快速开始</h2></div>
+        <div class="quick-grid">
+          <button class="quick" data-go="contacts"><span class="quick-icon">＋</span><b>添加授权联系人</b><small>先确认接收同意</small></button>
+          <button class="quick" data-go="templates"><span class="quick-icon">✎</span><b>创建消息模板</b><small>保存常用内容</small></button>
+          <button class="quick" data-go="tasks"><span class="quick-icon">▤</span><b>新建任务草稿</b><small>检查目标和内容</small></button>
+          <button class="quick" data-go="accounts"><span class="quick-icon">◎</span><b>登记账号资料</b><small>不输入密码或验证码</small></button>
+        </div>
+        <div class="panel"><div class="panel-title"><b>使用原则</b><span class="tag">安全优先</span></div><p>只管理你自己的账号，以及明确同意接收消息的联系人。不要导入来源不明的 Session，不要用工具绕过平台限制或发送骚扰信息。</p></div>
+      </section>
+
+      <section class="page" id="page-accounts">
+        <div class="page-heading"><span class="eyebrow">ACCOUNT CENTER</span><h1>账号管理</h1><p>登记账号备注，正式授权功能将在服务端联调阶段接入。</p></div>
+        <form id="accountForm" class="form-card">
+          <label>账号备注<input id="accountLabel" required maxlength="40" placeholder="例如：个人主号"></label>
+          <label>手机号（可选）<input id="accountPhone" inputmode="tel" maxlength="24" placeholder="+86 1xxxxxxxxxx"></label>
+          <button class="primary" type="submit">添加账号资料</button>
+          <small class="helper">此版本不会要求你填写 Telegram 密码、验证码或 API Hash。</small>
+        </form>
+        <div class="section-head"><h2>已登记账号</h2><span class="muted" id="accountCount">0 条</span></div>
+        <div id="accountList" class="list-stack"></div>
+      </section>
+
+      <section class="page" id="page-contacts">
+        <div class="page-heading"><span class="eyebrow">PERMISSION LIST</span><h1>联系人管理</h1><p>仅将明确同意接收你消息的人加入可用目标。</p></div>
+        <form id="contactForm" class="form-card">
+          <label>联系人备注<input id="contactName" required maxlength="50" placeholder="例如：活动报名用户"></label>
+          <label>Telegram 用户名 / ID<input id="contactHandle" required maxlength="80" placeholder="@username 或 ID"></label>
+          <label class="checkline"><input id="contactConsent" type="checkbox" required><span>我已取得该联系人的明确同意，可向其发送相关消息。</span></label>
+          <button class="primary" type="submit">添加授权联系人</button>
+        </form>
+        <div class="section-head"><h2>授权名单</h2><span class="muted" id="contactCount">0 条</span></div>
+        <div id="contactList" class="list-stack"></div>
+      </section>
+
+      <section class="page" id="page-templates">
+        <div class="page-heading"><span class="eyebrow">MESSAGE LIBRARY</span><h1>消息模板</h1><p>整理经过确认的通知、服务和业务消息。</p></div>
+        <form id="templateForm" class="form-card">
+          <label>模板名称<input id="templateName" required maxlength="50" placeholder="例如：活动提醒"></label>
+          <label>消息内容<textarea id="templateBody" required maxlength="3000" rows="5" placeholder="输入消息内容…"></textarea></label>
+          <button class="primary" type="submit">保存模板</button>
+        </form>
+        <div class="section-head"><h2>已保存模板</h2><span class="muted" id="templateCount">0 条</span></div>
+        <div id="templateList" class="list-stack"></div>
+      </section>
+
+      <section class="page" id="page-tasks">
+        <div class="page-heading"><span class="eyebrow">TASK WORKSPACE</span><h1>任务草稿</h1><p>创建前检查消息内容和授权目标。本版本只保存草稿，不执行发送。</p></div>
+        <form id="taskForm" class="form-card">
+          <label>任务名称<input id="taskName" required maxlength="60" placeholder="例如：周末活动通知"></label>
+          <label>选择消息模板<select id="taskTemplate"><option value="">选择模板（可选）</option></select></label>
+          <label>消息内容<textarea id="taskBody" required maxlength="3000" rows="5" placeholder="填写要发送的消息"></textarea></label>
+          <div class="field-label">选择授权联系人</div>
+          <div id="taskTargets" class="target-picker empty">请先在联系人管理中添加并确认授权联系人。</div>
+          <button class="primary" type="submit">保存任务草稿</button>
+          <small class="helper">保存草稿不会向任何 Telegram 用户发送消息。</small>
+        </form>
+        <div class="section-head"><h2>任务记录</h2><span class="muted" id="taskCount">0 条</span></div>
+        <div id="taskList" class="list-stack"></div>
+      </section>
+
+      <section class="page" id="page-logs">
+        <div class="page-heading"><span class="eyebrow">ACTIVITY</span><h1>操作日志</h1><p>记录本机数据变更，方便检查。</p></div>
+        <div class="toolbar"><button class="secondary" id="exportBtn">导出备份 JSON</button><button class="secondary danger-text" id="clearLogsBtn">清空日志</button></div>
+        <div id="logList" class="list-stack"></div>
+      </section>
+
+      <section class="page" id="page-settings">
+        <div class="page-heading"><span class="eyebrow">PREFERENCES</span><h1>设置</h1><p>管理本地数据和应用信息。</p></div>
+        <div class="settings-card">
+          <div class="setting-row"><div><b>应用版本</b><small>TG Studio Mobile 0.1.0</small></div><span class="tag">PWA</span></div>
+          <div class="setting-row"><div><b>数据存储</b><small>当前浏览器本地存储</small></div><span class="tag">Local</span></div>
+          <div class="setting-row"><div><b>Telegram 连接</b><small>尚未接入真实 API</small></div><span class="tag warning">未连接</span></div>
+          <div class="setting-row"><div><b>平台适配</b><small>iPhone 优先，兼容 Android Chrome</small></div><span class="tag">Responsive</span></div>
+        </div>
+        <div class="panel"><b>数据安全提示</b><p>不要在共享设备上保存敏感信息。清除浏览器网站数据会删除本机资料。正式版应通过 HTTPS、服务端身份认证和加密 Session 存储完成 Telegram 授权。</p></div>
+        <button class="secondary danger-outline full" id="resetBtn">删除本机全部演示数据</button>
+      </section>
+    </main>
+
+    <nav class="tabbar" aria-label="主导航">
+      <button class="tab active" data-page="home"><span>⌂</span><small>首页</small></button>
+      <button class="tab" data-page="accounts"><span>◎</span><small>账号</small></button>
+      <button class="tab" data-page="contacts"><span>♧</span><small>联系人</small></button>
+      <button class="tab" data-page="templates"><span>▤</span><small>模板</small></button>
+      <button class="tab" data-page="tasks"><span>↗</span><small>任务</small></button>
+      <button class="tab" data-page="logs"><span>≡</span><small>日志</small></button>
+      <button class="tab" data-page="settings"><span>⚙</span><small>设置</small></button>
+    </nav>
+  </div>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>
